@@ -4,7 +4,7 @@ go-selfupdate
 This is was based on work from [sanbornm/go-selfupdate](https://github.com/sanbornm/go-selfupdate) but with updates to make suite the needs of my software
 
 [![GoDoc](https://godoc.org/github.com/jwhitcraft/go-selfupdate/selfupdate?status.svg)](https://godoc.org/github.com/jwhitcraft/go-selfupdate/selfupdate)
-[![Build Status](https://travis-ci.org/jwhitcraft/go-selfupdate.svg?branch=master)](https://travis-ci.org/sanbornm/go-selfupdate)
+[![Build Status](https://travis-ci.org/jwhitcraft/go-selfupdate.svg?branch=master)](https://travis-ci.org/jwhitcraft/go-selfupdate)
 
 Enable your Golang applications to self update.  Inspired by Chrome based on Heroku's [hk](https://github.com/heroku/hk).
 
@@ -12,6 +12,7 @@ Enable your Golang applications to self update.  Inspired by Chrome based on Her
 
 * Tested on Mac, Linux, Arm, and Windows
 * Creates binary diffs with [bsdiff](http://www.daemonology.net/bsdiff/) allowing small incremental updates
+  * `brew install bsdiff` on Mac
 * Falls back to full binary update if diff fails to match SHA
 
 ## QuickStart
