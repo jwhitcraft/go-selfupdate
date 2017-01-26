@@ -1,1 +1,10 @@
 language: go
+
+go:
+  - 1.6
+  - 1.7
+  - tip
+
+script:
+ - go get github.com/Masterminds/glide
+ - go test -v `glide novendor`

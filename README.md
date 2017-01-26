@@ -1,8 +1,10 @@
 go-selfupdate
 =============
 
-[![GoDoc](https://godoc.org/github.com/sanbornm/go-selfupdate/selfupdate?status.svg)](https://godoc.org/github.com/sanbornm/go-selfupdate/selfupdate)
-[![Build Status](https://travis-ci.org/sanbornm/go-selfupdate.svg?branch=master)](https://travis-ci.org/sanbornm/go-selfupdate)
+This is was based on work from [sanbornm/go-selfupdate](https://github.com/sanbornm/go-selfupdate) but with updates to make suite the needs of my software
+
+[![GoDoc](https://godoc.org/github.com/jwhitcraft/go-selfupdate/selfupdate?status.svg)](https://godoc.org/github.com/jwhitcraft/go-selfupdate/selfupdate)
+[![Build Status](https://travis-ci.org/jwhitcraft/go-selfupdate.svg?branch=master)](https://travis-ci.org/sanbornm/go-selfupdate)
 
 Enable your Golang applications to self update.  Inspired by Chrome based on Heroku's [hk](https://github.com/heroku/hk).
 
@@ -15,7 +17,7 @@ Enable your Golang applications to self update.  Inspired by Chrome based on Her
 ## QuickStart
 
 ### Enable your App to Self Update
-
+```go
 	var updater = &selfupdate.Updater{
 		CurrentVersion: version,
 		ApiURL:         "http://updates.yourdomain.com/",
@@ -24,11 +26,17 @@ Enable your Golang applications to self update.  Inspired by Chrome based on Her
 		Dir:            "update/",
 		CmdName:        "myapp", // app name
 	}
-
+	
 	if updater != nil {
-		go updater.BackgroundRun()
+		// check if an update is available first
+		new_version, err := updater.HasUpdate()
+		
+		if new_version != "" {
+			fmt.Printf("Upgrading to v%s\n", new_version)
+			go updater.BackgroundRun()
+		}
 	}
-
+```
 ### Push Out and Update
 
     go-selfupdate myapp 1.2
