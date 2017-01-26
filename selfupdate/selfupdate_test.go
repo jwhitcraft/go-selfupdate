@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"testing"
+	"runtime"
 )
 
 var testHash = sha256.New()
@@ -30,7 +31,7 @@ func TestUpdaterWithEmptyPayloadNoErrorNoUpdate(t *testing.T) {
 	mr := &mockRequester{}
 	mr.handleRequest(
 		func(url string) (io.ReadCloser, error) {
-			equals(t, "http://updates.yourdomain.com/myapp/darwin-amd64.json", url)
+			equals(t, "http://updates.yourdomain.com/myapp/" + runtime.GOOS + "-amd64.json", url)
 			return newTestReaderCloser("{}"), nil
 		})
 	updater := createUpdater(mr)
@@ -45,7 +46,7 @@ func TestUpdaterWithEmptyPayloadNoErrorNoUpdateEscapedPath(t *testing.T) {
 	mr := &mockRequester{}
 	mr.handleRequest(
 		func(url string) (io.ReadCloser, error) {
-			equals(t, "http://updates.yourdomain.com/myapp%2Bfoo/darwin-amd64.json", url)
+			equals(t, "http://updates.yourdomain.com/myapp%2Bfoo/" + runtime.GOOS + "-amd64.json", url)
 			return newTestReaderCloser("{}"), nil
 		})
 	updater := createUpdaterWithEscapedCharacters(mr)
@@ -60,7 +61,7 @@ func TestUpdaterHasUpdateWillReturnEmptyString(t *testing.T) {
 	mr := &mockRequester{}
 	mr.handleRequest(
 		func(url string) (io.ReadCloser, error) {
-			equals(t, "http://updates.yourdomain.com/myapp/darwin-amd64.json", url)
+			equals(t, "http://updates.yourdomain.com/myapp/" + runtime.GOOS + "-amd64.json", url)
 			return newTestReaderCloser(`{
     "Version": "1.2",
     "Sha256": "UFYeBigrXaRqJyPgCO9f8Pr22rAi0ZoovbTSmO6vxaY="
@@ -81,7 +82,7 @@ func TestUpdaterHasUpdateWillReturnNewVersion(t *testing.T) {
 	mr := &mockRequester{}
 	mr.handleRequest(
 		func(url string) (io.ReadCloser, error) {
-			equals(t, "http://updates.yourdomain.com/myapp/darwin-amd64.json", url)
+			equals(t, "http://updates.yourdomain.com/myapp/" + runtime.GOOS + "-amd64.json", url)
 			return newTestReaderCloser(`{
     "Version": "1.3",
     "Sha256": "UFYeBigrXaRqJyPgCO9f8Pr22rAi0ZoovbTSmO6vxaY="
