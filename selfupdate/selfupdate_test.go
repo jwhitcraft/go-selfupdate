@@ -56,6 +56,48 @@ func TestUpdaterWithEmptyPayloadNoErrorNoUpdateEscapedPath(t *testing.T) {
 	}
 }
 
+func TestUpdaterHasUpdateWillReturnEmptyString(t *testing.T) {
+	mr := &mockRequester{}
+	mr.handleRequest(
+		func(url string) (io.ReadCloser, error) {
+			equals(t, "http://updates.yourdomain.com/myapp/darwin-amd64.json", url)
+			return newTestReaderCloser(`{
+    "Version": "1.2",
+    "Sha256": "UFYeBigrXaRqJyPgCO9f8Pr22rAi0ZoovbTSmO6vxaY="
+}`), nil
+		})
+	updater := createUpdater(mr)
+
+	newVersion, err := updater.HasUpdate()
+	if newVersion != "" {
+		t.Errorf("Expected newVersion to be empty, but got %s", newVersion)
+	}
+	if err != nil {
+		t.Errorf("Error occurred: %#v", err)
+	}
+}
+
+func TestUpdaterHasUpdateWillReturnNewVersion(t *testing.T) {
+	mr := &mockRequester{}
+	mr.handleRequest(
+		func(url string) (io.ReadCloser, error) {
+			equals(t, "http://updates.yourdomain.com/myapp/darwin-amd64.json", url)
+			return newTestReaderCloser(`{
+    "Version": "1.3",
+    "Sha256": "UFYeBigrXaRqJyPgCO9f8Pr22rAi0ZoovbTSmO6vxaY="
+}`), nil
+		})
+	updater := createUpdater(mr)
+
+	newVersion, err := updater.HasUpdate()
+	if newVersion != "1.3" {
+		t.Errorf("Expected newVersion to be 1.3, but got %s", newVersion)
+	}
+	if err != nil {
+		t.Errorf("Error occurred: %#v", err)
+	}
+}
+
 func createUpdater(mr *mockRequester) *Updater {
 	return &Updater{
 		CurrentVersion: "1.2",

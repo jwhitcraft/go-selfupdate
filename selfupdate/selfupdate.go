@@ -120,6 +120,19 @@ func (u *Updater) BackgroundRun() error {
 	return nil
 }
 
+// HasUpdate will check to see if an update is available, if an empty string is returned, no update is available
+func (u *Updater) HasUpdate() (string, error) {
+	err := u.fetchInfo()
+	if err != nil {
+		return "", err
+	}
+	if u.Info.Version == u.CurrentVersion {
+		return "", nil
+	}
+
+	return u.Info.Version, nil
+}
+
 func (u *Updater) wantUpdate() bool {
 	path := u.getExecRelativeDir(u.Dir + upcktimePath)
 	if u.CurrentVersion == "dev" || (!u.ForceCheck && readTime(path).After(time.Now())) {
